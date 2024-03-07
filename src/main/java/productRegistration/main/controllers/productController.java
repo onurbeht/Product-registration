@@ -1,11 +1,12 @@
 package productRegistration.main.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import productRegistration.main.entities.product.Product;
+import productRegistration.main.entities.product.ProductDTO;
 import productRegistration.main.entities.product.ProductRepository;
 
 import java.util.List;
@@ -33,6 +34,17 @@ public class ProductController {
 
         //Return the list fo products
         return ResponseEntity.ok(products);
+    }
+
+//POST
+    @PostMapping                //Valid the data from product and get it request body
+    ResponseEntity registerProduct(@RequestBody @Valid ProductDTO product) {
+        Product newProduct = new Product(product.name(), product.price_in_cents());
+
+        //Save new product
+        productRepository.save(newProduct);
+
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).build();
     }
 
 }

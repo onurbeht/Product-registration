@@ -20,5 +20,12 @@ public class Product extends RepresentationModel<Product> {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String name;
-    private Number price_in_cents;
+    private Integer price_in_cents;
+
+    //Constructor with name and price_in_cents
+    public Product (String name, Integer price_in_cents) {
+        this.name = name;
+        this.price_in_cents = price_in_cents;
+    }
+
 }
