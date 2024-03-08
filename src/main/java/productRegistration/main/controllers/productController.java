@@ -1,5 +1,6 @@
 package productRegistration.main.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import productRegistration.main.entities.product.Product;
 import productRegistration.main.entities.product.ProductDTO;
 import productRegistration.main.entities.product.ProductRepository;
+import productRegistration.main.infra.exceptions.RequestHandleException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -56,8 +58,8 @@ public class ProductController {
                 return ResponseEntity.ok(product);
             }
 
-        //If optionalProduct is false, return NOT FOUND
-        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Product not found");
+        //If there is no product, throw a new exception, that will be threat by RequestHandlerException
+        throw new EntityNotFoundException();
     }
 
 
@@ -91,8 +93,8 @@ public class ProductController {
             return ResponseEntity.ok(updateProduct);
         }
 
-        //If oldProduct is false, return NOT FOUND
-        return ResponseEntity.status(HttpStatusCode.valueOf(404)).build();
+        //If there is no product, throw a new exception, that will be threat by RequestHandlerException
+        throw new EntityNotFoundException();
     }
 
 //DELETE
@@ -112,7 +114,8 @@ public class ProductController {
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.notFound().build();
+        //If there is no product, throw a new exception, that will be threat by RequestHandlerException
+        throw new EntityNotFoundException();
     }
 
 }
