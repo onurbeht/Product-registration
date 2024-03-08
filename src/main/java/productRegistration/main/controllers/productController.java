@@ -26,8 +26,8 @@ public class ProductController {
 //GET
     @GetMapping
     ResponseEntity<List<Product>> getAll() {
-        //Get all
-        List<Product> products = productRepository.findAll();
+        //Get all that has the attribute active == true
+        List<Product> products = productRepository.findAllByActiveTrue();
 
         //Check if is not empty
         if(!products.isEmpty()) {
@@ -74,7 +74,7 @@ public class ProductController {
 
 //PUT
     @PutMapping()
-    @Transactional
+    @Transactional              //Valid the data from product and get it request body
     ResponseEntity<Product> getOne(@RequestBody @Valid ProductDTO data) {
         //Get data from the old product
         Optional<Product> oldProduct = productRepository.findById(data.id());
@@ -97,13 +97,22 @@ public class ProductController {
 
 //DELETE
     @DeleteMapping("/{id}")
+    @Transactional
     ResponseEntity deleteById(@PathVariable String id) {
-        if(productRepository.findById(id).isPresent()) {
-            productRepository.deleteById(id);
+        //Check if the product exists
+        var productToBeDeleted = productRepository.findById(id);
+
+        if(productToBeDeleted.isPresent()) {
+            //Get the instace of product
+            Product product = productToBeDeleted.get();
+
+            //Set the active as false and disable then
+            product.setActive(false);
+
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Product not found");
+        return ResponseEntity.notFound().build();
     }
 
 }
