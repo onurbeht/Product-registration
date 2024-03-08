@@ -22,11 +22,13 @@ public class Product extends RepresentationModel<Product> {
     private String id;
     private String name;
     private Integer price_in_cents;
+    private Boolean active;
 
     //Constructor with name and price_in_cents
     public Product (String name, Integer price_in_cents) {
         this.name = name;
         this.price_in_cents = price_in_cents;
+        this.active = true;
     }
 
 
