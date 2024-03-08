@@ -85,7 +85,6 @@ public class ProductController {
             Product updateProduct = oldProduct.get();
 
             //Set the new values of product
-
             updateProduct.setName(data.name());
             updateProduct.setPrice_in_cents(data.price_in_cents());
 
@@ -101,7 +100,7 @@ public class ProductController {
     ResponseEntity deleteById(@PathVariable String id) {
         if(productRepository.findById(id).isPresent()) {
             productRepository.deleteById(id);
-            return ResponseEntity.ok("Product deleted");
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Product not found");
