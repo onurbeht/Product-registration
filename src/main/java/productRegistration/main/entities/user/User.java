@@ -25,6 +25,13 @@ public class User implements UserDetails {
     private String password;
     private UserRole role;
 
+    //Create a constructor with args, login, password and role
+    public User(String login, String password, UserRole role) {
+        this.login = login;
+        this.password = password;
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //check if role is ADMIN, and return a list with the roles
