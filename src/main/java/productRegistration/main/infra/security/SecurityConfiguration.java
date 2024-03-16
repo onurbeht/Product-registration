@@ -1,5 +1,6 @@
 package productRegistration.main.infra.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,12 +11,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 //annotation, to define this class as a configuration class
 @Configuration
 //Disable the default configs
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+    @Autowired
+    SecurityFilter securityFilter;
 
     //Create a security filter chain, to validate the requests
     @Bean
@@ -34,6 +39,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
                         //Any other endpoint, just need o be authenticated
                         .anyRequest().authenticated())
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

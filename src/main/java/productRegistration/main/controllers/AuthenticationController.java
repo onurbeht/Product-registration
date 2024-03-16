@@ -15,6 +15,7 @@ import productRegistration.main.entities.user.AuthenticationDTO;
 import productRegistration.main.entities.user.User;
 import productRegistration.main.entities.user.RegisterDTO;
 import productRegistration.main.entities.user.UserRepository;
+import productRegistration.main.services.TokenService;
 
 @RestController
 @RequestMapping("/auth")
@@ -24,6 +25,9 @@ public class AuthenticationController {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
+    @Autowired
+    TokenService tokenService;
 
 //POST
     @PostMapping("/register")       //Get the data form the body and valid them
@@ -40,6 +44,8 @@ public class AuthenticationController {
         //Save the new user
         userRepository.save(newUser);
 
+
+
         return ResponseEntity.ok().build();
 
     }
@@ -51,7 +57,10 @@ public class AuthenticationController {
         //Authenticate the user
         var auth = authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        //generate and return the token to user
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(token);
 
     }
 }
